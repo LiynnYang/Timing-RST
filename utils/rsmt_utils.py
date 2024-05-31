@@ -34,7 +34,7 @@ class ArrayType:
 class Evaluator:
     def __init__(self):
         # path = os.getcwd() + '/../algorithms/libeval.so'
-        path = '/home/dbcloud/sgw/RSMT/algorithms/libeval.so'
+        path = 'algorithms/libeval.so'
         eval_mod = ctypes.cdll.LoadLibrary(path)  #加载库
         DoubleArray = ArrayType(ctypes.c_double)  #浮点数初始化器
         IntArray = ArrayType(ctypes.c_int)
