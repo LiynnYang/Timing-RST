@@ -15,15 +15,16 @@ from models.model_sorted import Actor
 from data.dataset import RandomRawdataInference
 from torch.utils.data import DataLoader
 from utils.myutil import eval_len_from_adj, eval_distance
+from tqdm import tqdm
 import time
 # Arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--parameter', type=str, default='beCalled', help='parameter save directory')
-parser.add_argument('--degree', type=int, default=40, help='degree of nets')
-parser.add_argument('--batch_size', type=int, default=1000, help='test batch size')
+parser.add_argument('--degree', type=int, default=30, help='degree of nets')
+parser.add_argument('--batch_size', type=int, default=1024, help='test batch size')
 parser.add_argument('--eval_size', type=int, default=10000, help='eval set size')
 parser.add_argument('--transform', type=int, default=8, help='transform')
-parser.add_argument('--device', type=str, default='cuda:6', help='transform')
+parser.add_argument('--device', type=str, default='cuda:0', help='transform')
 parser.add_argument("--weight", default=0.0, type=float, help='weight of radius in cost function.')
 args = parser.parse_args()
 # TODO:1
@@ -108,12 +109,12 @@ if args.transform == 1:
         f.write('\n' + str(mean_radius) + ' ' + str(mean_length) + ' ' + str(args.eval_size) + ' ' + str(
             args.weight) + ' ' + str(inference_time / args.eval_size))
 
-# else:  # transform=8
-    # eval_lengths, eval_radius, eval_tradeoff, error_batch = [], [], [], []
+else:  # transform=8
+    eval_lengths, eval_radius, eval_tradeoff = [], [], []
     inference_time = 0
     # base = torch.tensor([[[0.5, 0.5]]]).to(device)
     # f = lambda d: 1 / (1 + d ** 2)
-    for eval_batch in eval_loader:
+    for eval_batch in tqdm(eval_loader):
         arrs = eval_batch
         arrs = arrs.to(device)
         # opt_len = opt_len.to(device_id)
@@ -124,15 +125,15 @@ if args.transform == 1:
             start_time = time.time()
             new_adj, _, indexs = actor(t_arrs, deterministic=True)
             lengths = eval_len_from_adj(t_arrs, args.degree, new_adj)
-            length = np.array(length).reshape(8, -1, args.degree, 2)
+            lengths = np.array(lengths).reshape(8, -1)
             inference_time += time.time() - start_time
             radius = np.array(eval_distance(t_arrs, indexs, [0] * t_arrs.shape[0]))
-            radius = radius.reshape(8, -1, args.degree, 2)
+            radius = radius.reshape(8, -1)
             tradeoff = (1 - args.weight) * lengths + args.weight * radius
         best_index = np.argmin(tradeoff, 0)
         best_tradeoff = np.min(tradeoff, 0)
         best_lengths = lengths[best_index, np.arange(arrs.shape[0])]
-        best_radius = best_radius[best_index, np.arange(arrs.shape[0])]
+        best_radius = radius[best_index, np.arange(arrs.shape[0])]
         # for t in range(8):  # 8次翻转
         #     t_arrs = transform_inputs(arrs, t)
         #     # xy_min = torch.min(t_arrs, dim=1, keepdim=True)[0]
@@ -159,15 +160,15 @@ if args.transform == 1:
         eval_lengths.append(np.array(best_lengths).mean())
         eval_radius.append(np.array(best_radius).mean())
         eval_tradeoff.append(np.array(best_tradeoff).mean())
-        error_batch.append(np.array(error_best).mean())
-    mean_length, mean_radius, mean_tradeoff, mean_error = sum(eval_lengths) / len(eval_lengths), \
+        # error_batch.append(np.array(error_best).mean())
+    mean_length, mean_radius, mean_tradeoff = sum(eval_lengths) / len(eval_lengths), \
                                                           sum(eval_radius) / len(eval_radius), sum(
-        eval_tradeoff) / len(eval_tradeoff), sum(error_batch) / len(error_batch)
-    print("mean_length:{}, mean_radius:{}, mean_tradeoff:{}, mean_error:{}".format(mean_length, mean_radius,
-                                                                                   mean_tradeoff, mean_error))
+        eval_tradeoff) / len(eval_tradeoff)
+    print("mean_length:{}, mean_radius:{}, mean_tradeoff:{},".format(mean_length, mean_radius,
+                                                                    mean_tradeoff))
     with open(filename, 'a') as f:
         f.write('\n' + str(mean_radius) + ' ' + str(mean_length) + ' ' + str(args.eval_size) + ' ' + str(
             args.weight) + ' ' + str(inference_time / args.eval_size))
 
 
-print(inference_time)
+print('inference_time:',inference_time)
