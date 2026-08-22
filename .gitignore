@@ -1,0 +1,11 @@
+build/
+__pycache__/
+*.pyc
+*.pt
+.tensorboard_new/
+tensorboard_new/
+record.txt
+_upstream/
+.vscode/
+CMakeFiles/
+CMakeCache.txt

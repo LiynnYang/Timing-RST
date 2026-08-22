@@ -77,8 +77,9 @@ class RandomRawdataInference(Dataset):
     def __init__(self, num, degree, file_path=None):  # num = batched * batch_size
         # self.arr, self.adj, self.adj_in, self.adj_out, self.mask = get_data(num, degree)
         if file_path is None or not os.path.exists(file_path):
-            print('no test file, must!')
-            exit(0)
+            print('no test file, generating random nets.')
+            cases = np.round(np.random.rand(num, degree, 2), 8)
+            self.arr = torch.from_numpy(cases).to(torch.float32)
         else:
             unsampled_cases = np.load(file_path)
             self.arr = torch.from_numpy(unsampled_cases).to(torch.float32)
