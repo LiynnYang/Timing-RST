@@ -1,3 +1,6 @@
+# Original GeoSteiner evaluator (requires algorithms/geosteiner).
+# Polar quadtree divide-and-merge is built from the repo root:
+#   cmake -S . -B build
 project(RSMTests)
 cmake_minimum_required(VERSION 2.8)
 
