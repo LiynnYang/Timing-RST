@@ -13,6 +13,12 @@ The figure is a real run with `n=48` pins and block capacity `B=8` (source is th
 3. **Local subtrees** — each block calls the local solver (`points[0]` of that subset is the local source). For moderate blocks this is the Timing-RST Actor; a rectilinear MST is the fallback.
 4. **Merged global tree** — bidirectional binary-tree search stitches subtrees into one rectilinear tree.
 
+## Runtime Measurement
+
+The runtimes reported in the paper are measured with the neural network **batch mechanism**, following the evaluation methodology of REST [1]: instead of solving nets one by one, multiple nets are packed into a batch and inferred simultaneously on the GPU. Heuristic methods accelerate computation through multi-threading, but their parallelism is bottlenecked by the number of CPU cores and therefore rather limited. In contrast, a neural network batch can scale to thousands or even tens of thousands of nets, offering a far larger degree of parallelism and thus a significant speedup.
+
+[1] J. Liu, G. Chen and E. F. Y. Young, "REST: Constructing Rectilinear Steiner Minimum Tree via Reinforcement Learning," 2021 58th ACM/IEEE Design Automation Conference (DAC), San Francisco, CA, USA, 2021, pp. 1135-1140, doi: 10.1109/DAC18074.2021.9586209.
+
 ## Layout
 
 | Path | Role |
