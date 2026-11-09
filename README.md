@@ -17,36 +17,40 @@ The figure is a real run with `n=48` pins and block capacity `B=8` (source is th
 
 We noticed that a recent work ([PatLabor](https://chen-zhi-yang.github.io/files/Pareto_Optimization_of_Timing_Driven_Routing_Trees.pdf), DAC'25) reimplements our method (referred to as YSD) and reports trade-off curves that appear worse than SALT in some ranges. We clarify the metric definitions as follows.
 
-- **In our paper (Timing-RST)**, the radius \(R\) is the **maximum source–sink path length** on the routing tree:
-  \[
-  R(T)=\max_{v\in V\setminus\{s\}} d_T(s,v).
-  \]
-  Fig. 10 uses the normalized axes \(L/L_{\mathrm{FLUTE}}\) and \(R/R_{\mathrm{CL}}\).
+- **In our paper (Timing-RST)**, the radius $R$ is the **maximum source–sink path length** on the routing tree:
 
-- **In SALT**, the path metric is the **shallowness** \(\alpha\), i.e. the **maximum stretch relative to the Manhattan distance**:
-  \[
-  \alpha(T)=\max_{v\in V\setminus\{s\}} \frac{d_T(s,v)}{d_G(s,v)}.
-  \]
-  SALT's lightness \(\beta'=w(T)/w(\mathrm{FLUTE})\) is analogous to our normalized wirelength, but \(\alpha\) is **not** the same as our \(R/R_{\mathrm{CL}}\).
+$$
+R(T)=\max_{v\in V\setminus\{s\}} d_T(s,v).
+$$
 
-Even when evaluation protocols differ, the released results still demonstrate the effectiveness of our architecture and training. If one prefers SALT's \(\alpha\)-style objective, the loss can be rewritten accordingly and training restarted with little extra engineering.
+  Fig. 10 uses the normalized axes $L/L_{\mathrm{FLUTE}}$ and $R/R_{\mathrm{CL}}$.
+
+- **In SALT**, the path metric is the **shallowness** $\alpha$, i.e. the **maximum stretch relative to the Manhattan distance**:
+
+$$
+\alpha(T)=\max_{v\in V\setminus\{s\}} \frac{d_T(s,v)}{d_G(s,v)}.
+$$
+
+  SALT's lightness $\beta'=w(T)/w(\mathrm{FLUTE})$ is analogous to our normalized wirelength, but $\alpha$ is **not** the same as our $R/R_{\mathrm{CL}}$.
+
+Even when evaluation protocols differ, the released results still demonstrate the effectiveness of our architecture and training. If one prefers SALT's $\alpha$-style objective, the loss can be rewritten accordingly and training restarted with little extra engineering.
 
 ## Degree-30 trade-off (same 10k nets)
 
-Test set: `data/test_data/array_degree30_num10000.npy`. `inference.py` reports both wirelength \(L\) and radius \(R\) (max source–sink path).
+Test set: `data/test_data/array_degree30_num10000.npy`. `inference.py` reports both wirelength $L$ and radius $R$ (max source–sink path).
 
-Normalized axes match Fig. 10: \(X=L/L_{\mathrm{FLUTE}}\), \(Y=R/R_{\mathrm{CL}}\).
+Normalized axes match Fig. 10: $X=L/L_{\mathrm{FLUTE}}$, $Y=R/R_{\mathrm{CL}}$.
 
 Baseline points on this set:
 
-| Method | \(X=L/L_{\mathrm{FLUTE}}\) | \(Y=R/R_{\mathrm{CL}}\) |
+| Method | $X=L/L_{\mathrm{FLUTE}}$ | $Y=R/R_{\mathrm{CL}}$ |
 | --- | --- | --- |
 | FLUTE | 1.000 | 1.387 |
 | CL (RSA approx.) | 1.100 | 1.000 |
 
-### OURS (\(\lambda\)-sweep)
+### OURS ($\lambda$-sweep)
 
-| \(\lambda\) | \(L\) | \(R\) | \(X\) | \(Y\) |
+| $\lambda$ | $L$ | $R$ | $X$ | $Y$ |
 | --- | --- | --- | --- | --- |
 | 0.0 | 4.1621 | 1.8038 | 0.9894 | 1.4029 |
 | 0.1 | 4.1687 | 1.6431 | 0.9910 | 1.2779 |
@@ -59,9 +63,9 @@ Baseline points on this set:
 | 0.8 | 4.3688 | 1.2914 | 1.0386 | 1.0044 |
 | 0.9 | 4.4199 | 1.2870 | 1.0507 | 1.0010 |
 
-### SALT (\(\varepsilon\)-sweep)
+### SALT ($\varepsilon$-sweep)
 
-| \(\varepsilon\) | \(L\) | \(R\) | \(X\) | \(Y\) |
+| $\varepsilon$ | $L$ | $R$ | $X$ | $Y$ |
 | --- | --- | --- | --- | --- |
 | 0 | 4.6663 | 1.2858 | 1.1093 | 1.0000 |
 | 0.05 | 4.6290 | 1.2881 | 1.1004 | 1.0018 |
