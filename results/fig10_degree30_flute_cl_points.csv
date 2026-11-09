@@ -1,0 +1,3 @@
+method,L,R,X_L_over_FLUTE,Y_R_over_CL,note
+FLUTE,4.2064911887,1.7829785854,1.0,1.3867058814088116,from /tmp/flute_rsa_means.txt mean_L_FLUTE + mean_R_FLUTE_int/scale
+CL_RSA,4.6284892830999995,1.2857655032,1.1003206890183492,1.0,from /tmp/flute_rsa_means.txt mean_L_RSA_int/scale + mean_R_CL
