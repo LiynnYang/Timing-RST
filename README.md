@@ -25,7 +25,7 @@ $$
 
   Fig. 10 uses the normalized axes $L/L_{\mathrm{FLUTE}}$ and $R/R_{\mathrm{CL}}$.
 
-- **In SALT**, the path metric is the **shallowness** $\alpha$, i.e. the **maximum stretch relative to the Manhattan distance**:
+- **In PatLabor**, the path metric is the **shallowness** $\alpha$, i.e. the **maximum stretch relative to the Manhattan distance**:
 
 $$
 \alpha(T)=\max_{v\in V\setminus\{s\}} \frac{d_T(s,v)}{d_G(s,v)}.
